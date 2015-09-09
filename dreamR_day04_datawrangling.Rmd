@@ -1,0 +1,69 @@
+---
+title: "dreamR day4 Data wrangling"
+author: "Sejin Park"
+date: "2015년 9월 6일"
+output: html_document
+---
+
+## 어떠한 형태의 데이터가 필요할까?
+
+Wide format vs Long format 
+
+## tiny data
+
+각 변수는 하나의 열을 구성한다. 
+각 관측치는 하나의 행을 구성한다. 
+하나의 테이블에는 동일한 관측에 의해서 수집된 데이터가 담겨있다. 
+
+
+## Tidy data
+
+관측 1 
+
+영화의 일별 관객수 
+
+관측 2
+
+영화의 주간 순위 
+```{r}
+#install.packages('tidyr')
+library(tidyr)
+```
+
+
+## tidyr::gather()
+
+wide format -> long format
+gather(data, key column name, value column name, range of key column)
+
+```{r}
+weather_wide = read.csv("weather_wide.csv", fileEncoding='UTF-8')
+weather_wide
+weather_long = gather(weather_wide, hour, temp, hour03:hour21)
+head(weather_long)
+detach("package:tidyr", unload=TRUE)
+```
+
+
+## dlyr
+
+```{r}
+install.packages('dplyr')
+library(dplyr)
+```
+
+## dplyr::select()
+
+- 지정한 열을 선택할 수 있다. 
+- 열의 이름을 변경할 수 있다. 
+
+select(weather_long, location, temp)
+select(weather_long, loc = location, temp)
+
+```{r}
+
+select(weather_long ,location, temp)
+select(weather_long, loc = location, temp)
+
+
+

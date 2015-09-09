@@ -1,0 +1,43 @@
+---
+title: "dreamR_day5_Rscraping"
+author: "Sejin Park"
+date: "2015년 9월 2일"
+output: html_document
+---
+
+R
+
+https://en.wikipedia.org/wiki/List_of_South_Korean_regions_by_GDP
+
+library(rvest) 
+url_wiki = 'https://en.wikipedia.org/wiki/List_of_South_Korean_regions_by_GDP' wiki = html(url_wiki)
+
+html_table(html_node(wiki, 'table'))
+
+```{r}
+
+library(rvest) 
+
+url_wiki = 'https://en.wikipedia.org/wiki/List_of_South_Korean_regions_by_GDP' 
+
+wiki = html(url_wiki)
+
+html_table(html_node(wiki, 'table'))
+
+boxoffice = xml('boxoffice/boxoffice0831.xml', encoding = 'UTF-8')
+daily = xml_node(boxoffice, 'dailyboxofficelist')
+rank = xml_text(xml_nodes(daily, 'rank'))
+movieNm = xml_text(xml_nodes(daily, 'movienm'))
+audiCnt = xml_text(xml_nodes(daily, 'audicnt'))
+
+boxoffice
+daily_boxoffice = data.frame(rank, movieNm, audiCnt)
+daily_boxoffice 
+daily
+rank
+movieNm
+audiCnt
+
+xml_node(boxoffice, 'dailyboxofficelist')
+
+```

@@ -1,0 +1,163 @@
+---
+title: "dreamR_day2"
+author: "Sejin Park"
+date: "2015년 8월 26일"
+output: html_document
+---
+## 반복문 for 
+for(var in vector){
+}
+
+```{r}
+for(i in c(1,2,3)){
+  print(i)
+}
+
+for(i in 1:3) print(i)
+
+month.name
+
+for(m in month.name) print(m)
+```
+
+## 조건문 if
+
+if(condition){
+code for true
+} else{
+code for false
+}
+
+```{r}
+5 > 4
+5 >= 4
+
+4<3
+4<=3
+
+4==4
+4!=4
+
+'May' %in% month.name
+5 %in% 10:20
+```
+
+letters벡터와 for, if 문을 이용해서 c('a','e','l','o','u')인 경우에만 출력하는 코드를 작성해보세요. 
+```{r}
+letters
+for(i in letters){
+  print(i)
+}
+
+for(i in letters){
+  if(i %in% c('a','e','l','o','u')){
+  print(i)
+  }
+}
+```
+
+
+```{r}
+score_df = data.frame(
+  math = c(40,70,80),
+  korean = c(50,60,70),
+  english = c(30,40,50),
+  art = c('A','A','C')
+)
+```
+
+
+for(학점 in 미술점수){  
+  학점이 A라면 {  
+  점수를 100점으로  
+  }학점이 B라면 {  
+  점수를 80점으로  
+  }나머지{  
+  점수를 60점으로   
+  }  
+}  
+
+```{r}
+미술점수 <- score_df$art
+미술점수
+
+art_score = c()
+for(학점 in 미술점수){
+    if(학점 == 'A'){
+    art_score = c(art_score, 100)
+    } else if(학점 == 'B'){
+    art_score = c(art_score, 80)
+    } else {
+    art_score = c(art_score, 60)
+    }
+}
+
+
+
+art_score = c()
+for(학점 in score_df$art){
+    if(학점 == 'A'){
+    art_score = c(art_score, 100)
+    } else if(학점 == 'B'){
+    art_score = c(art_score, 80)
+    } else {
+    art_score = c(art_score, 60)
+    }
+}
+
+score_df$art = art_score
+
+for(index in 1:dim(score_df)[2]){
+  print(
+    mean(score_df[, index])
+  )
+}
+
+```
+
+평균 데이터를 활용하기 위해
+빈 벡터에 평균값을 저장하자 
+
+```{r}
+score_mean = c()
+
+for(index in 1:dim(score_df)[2]){
+mean_value = mean(score_df[,index])
+score_mean = c(score_mean, mean_value)
+}
+
+```
+
+어떤 과목의 평균값인지 쉽게 알 수 있도록
+score_df의 name을 덮어씌우자 
+```{r}
+score_df
+score_mean
+names(score_df)
+names(score_mean) = names(score_df)
+score_mean
+```
+
+한 줄로 끝내기!
+```{r}
+sapply(score_df, mean)
+# iris데이터로 연습!
+sapply(iris[,-5], mean)
+```
+
+read.csv()
+csv파일을 불러온다. 
+```{r}
+temperature = read.csv('weather_data.csv', fileEncoding='UTF-8')
+str(temperature)
+```
+as.character()
+chr가 아닌 벡터를 chr로 변경한다. 
+```{r}
+temperature$location = as.character(temperature$location)
+temperature$date = as.character(temperature$date)
+# 서울의 온도만 벡터로 저장한다. 
+seoul_temp = temperature[temperature$location == '서울','temp']
+barplot(seoul_temp)
+in
+```
