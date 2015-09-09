@@ -1,0 +1,161 @@
+---
+title: "DreamR day05 Data Wrangling 2 "
+author: "Sejin Park"
+date: "2015년 9월 9일"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+
+
+```{r}
+
+library("dplyr")
+
+movie_thiswk = read.csv('weekly_thiswk.csv', stringsAsFactors = FALSE)
+
+movie_lastwk = read.csv('weekly_lastwk.csv', stringsAsFactors = FALSE)
+
+movie_data = read.csv('weekly_boxoffice_data.csv', stringsAsFactors = FALSE)
+
+movie_thiswk
+
+movie_lastwk
+
+movie_thiswk %>%
+  inner_join(movie_lastwk, by = 'title')
+
+movie_thiswk %>%
+  left_join(movie_lastwk, by = 'title')
+
+movie_thiswk %>%
+  left_join(movie_data, by = c('title'='titl'))
+
+movie_rank = movie_thiswk %>%
+  left_join(movie_lastwk, by = 'title')
+
+movie_rank$lastwk
+
+is.na(movie_rank$lastwk) 
+
+complete.cases(movie_rank)
+
+movie_rank %>%
+  filter(is.na(movie_rank$lastwk))
+
+movie_rank %>%
+  filter(complete.cases(movie_rank))
+```
+
+```{r}
+mean(c(1,2,3,4,5))
+mean(c(1,2,3,4,5,NA))
+```
+
+
+```{r}
+numbers = c(1:4, NA, 5:10)
+mean(numbers)
+
+# 해결책 1 
+mean(numbers, na.rm=TRUE)
+
+# 해결책 2
+numbers_nona = ifelse(is.na(numbers)==TRUE, 0, numbers)
+
+mean(numbers_nona)
+
+ifelse(is.na(numbers)==TRUE, 0, numbers)
+
+movie_rank %>% 
+  mutate(
+    lastwk_na = ifelse(is.na(lastwk) == TRUE, 0, lastwk)
+  )
+
+#install.packages('stringr')
+library('stringr')
+
+str_replace('꿈꾸는 데이터 디자이너','꿈꾸는','나는')
+
+str_replace('꿈꾸는 꿈꾸는 데이터 디자이너','꿈꾸는','나는')
+
+str_replace_all('꿈꾸는 꿈꾸는 데이터 디자이너','꿈꾸는','나는')
+
+```
+
+str_detect(원본문자열, 찾으려고 하는 패턴/단어)
+
+```{r}
+str_detect(movie_data$distributor,'Pictures')
+
+movie_data %>%
+  filter(str_detect(distributor, 'Pictures'))
+
+str_detect(movie_data$distributor, '^Sony')
+
+movie_data %>%
+  filter(str_detect(distributor,'^Sony'))
+```
+
+
+## Date
+
+```{r}
+#현재시각
+time = Sys.time()
+
+#요일 
+weekdays(time)
+
+# 월
+months(time)
+
+# 분기 
+quarters(time)
+
+```
+
+다양한 포맷에 대해서는 ?strftime 을 통해 살펴볼 수 있다. 
+
+```{r}
+strftime(time, "%m/%d")
+
+strftime(time, "%Y-%m-%d")
+strftime(time, "%y-%m-%d")
+
+strftime(time, "%Y")
+
+#일요일을 0으로 두었을 때 요일 표기 
+strftime(time, "%w")
+
+
+```
+
+## chr to Date
+
+```{r}
+str_time = '20150909'
+date_time = as.Date(str_time, format = '%Y%m%d')
+
+date_time + 30
+```
+
+
+## aapl
+
+```{r}
+#install.packages('gcookbook')
+library(gcookbook)
+aapl %>%
+  mutate(year = strftime(date, '%Y')) %>%
+  group_by(year) %>%
+  summarise(price = mean(adj_price)) %>%
+  print(n=30)
+
+aapl %>%
+  mutate(weekday = weekdays(date))  %>%
+  group_by(weekday) %>%
+  summarise(price = mean(adj_price))
+
+```
