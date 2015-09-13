@@ -1,0 +1,224 @@
+---
+title: "dreamR_day06_graph"
+author: "Sejin Park"
+date: "2015. 9. 13."
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+
+
+```{r}
+library(ggplot2)
+
+ggplot() +
+  geom_point(data = iris,
+             aes(x = Sepal.Length, y=Sepal.Width, colour = Species))
+
+```
+## 여러개의 레이어를 겹쳐서 그릴 수 있다. 
+
+```{r}
+ggplot() + 
+  geom_point(data = iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_smooth(data = iris, aes(x = Sepal.Length, y = Sepal.Width))
+
+```
+
+
+공통적으로 반영되는 요소들은 미리 정의해 둘 수 있다.   
+ggplot2의 결과물은 객첼 저장할 수 있다. 
+
+```{r}
+ggplot(data = iris, aes(x= Sepal.Length, y = Sepal.Width)) +
+  geom_point() +
+  geom_smooth()
+
+iris_plot = ggplot(data = iris, 
+                   aes(x = Sepal.Length, y = Sepal.Width))
+
+iris_plot +
+  geom_point() +
+  geom_smooth()
+
+```
+
+
+data = diamonds
+aes 는 x=carat, y=price일때 
+geom_point를 사용해서 산점도(scatter plot) 그리기. 
+
+```{r}
+data = diamonds
+head(data)
+```
+
+## Parameter
+
+```{r}
+iris_plot +
+  geom_point(size = 3, colour = 'red') +
+  geom_smooth()
+
+# parameter 지정 (에스테틱 일괄 지정)
+```
+사용가능한 에스테틱 확인하기 
+?geom_point 
+
+## Parameter
+```{r}
+iris_plot + 
+  geom_point(size = 3, colour = 'red') +
+  geom_smooth(method = 'lm')
+
+```
+
+
+```{r}
+# 선의 모양 변경 
+iris_plot +
+  geom_point(size =3 , colour = 'red') +
+  geom_smooth(linetype = 2)
+
+# standard error 의 범위를 표현하지 않는다. 
+iris_plot + 
+  geom_point(size = 3, colour = 'red') +
+  geom_smooth(se= FALSE)
+
+```
+
+data = iris
+aes는 x=Species , y= Sepal.Width 일 때, 
+geom_boxplot를 사용해서 boxplot 그리기
+면의 색상(fill)은 #3399ff
+선의 색상(colour 또는 color)은 #c8b923
+
+```{r}
+
+iris_plot = ggplot(data = iris, 
+          aes(x = Species, y = Sepal.Width))
+
+
+iris_plot + 
+  geom_boxplot(fill='#3399FF', colour='#C8B923')
+iris_plot + 
+  geom_boxplot(fill='#3399FF', colour='blue')
+
+```
+
+## Position Adjustment
+
+```{r}
+ggplot(data = mpg, aes(displ, hwy)) +
+  geom_point(position = "jitter") + 
+  geom_smooth()
+
+# 누적 막대그래프 
+
+ggplot(mtcars,
+  aes(factor(cyl), fill = factor(vs)))+
+  geom_bar(position = "stack")
+
+ggplot(mtcars,
+  aes(factor(cyl), fill = factor(vs)))+
+  geom_bar(position = "fill")
+
+ggplot(mtcars,
+  aes(factor(cyl), fill = factor(vs)))+
+  geom_bar(position = "dodge")
+```
+
+data = diamonds
+aes는 x=clarity, fill=cut일 때 
+geom_bar를 사용해서 누적 막대 그래프 그리기. 
+
+```{r}
+
+head(diamonds, 10)
+
+ggplot(diamonds, 
+    aes(x=clarity, fill=cut))+ 
+    geom_bar(position="stack")
+
+```
+
+
+
+```{r}
+dia_bar <- ggplot(diamonds, aes(x=cut, fill=cut)) + geom_bar()
+dia_bar + scale_fill_brewer()
+```
+
+
+
+
+```{r}
+dia_bar + 
+  scale_fill_brewer(palette = 'Paired')
+
+dia_bar + 
+  scale_fill_brewer(palette = 'Accent')
+
+```
+
+
+## Coordinate System 
+
+기본값은 Cartesian 이다. ( coord_cartesian() )
+
+좌표계에 대한 세부적인 옵션을 지정하거나 좌표계를 변경하고 X,Y축을 변경하는 것이 가능하다. 
+```{r}
+dia_bar + 
+  coord_flip()
+```
+
+
+```{r}
+dia_bar + 
+  coord_polar()
+```
+
+## Facetting 
+데이터들을 부분집합들을 하위 그래프로 분리해서 그릴 수 있다. 
+
+facet_wrap()은 그래프가 수평으로 나열되고
+facet_grid()는 수직과 수평으로 각각 다른 변수를 지정할 수 있다. 
+
+```{r}
+mtc_point <- ggplot(mtcars, aes(mpg, wt) + geom_point())
+
+mtc_point +
+  facet_wrap(~cyl)
+```
+
+
+
+```{r}
+ggplot(iris, aes(x=Sepal.Width, y=Sepal.Length)) +
+  geom_point()
+
+ggplot(iris, aes(x=Sepal.Width, y=Sepal.Length)) +
+  geom_point() +
+  facet_wrap(~ Species) + 
+  theme_bw()
+
+
+```
+
+42page
+```{r}
+ggplot(data=iris, aes(x=Species, y=Sepal.Width))+
+  geom_boxplot(fill='#3399FF', colour='#C8B923')
+
+
+iris_plot = ggplot(data = iris, 
+          aes(x = Species, y = Sepal.Width))
+
+iris_plot + 
+  geom_boxplot(fill='#3399FF', colour='#C8B923')
+
+iris_plot + 
+  geom_boxplot(fill='#3399FF', colour='blue')
+
+```
